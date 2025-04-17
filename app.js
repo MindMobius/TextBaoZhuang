@@ -29,6 +29,8 @@ function app() {
         styleLevel: 0,
         generatedText: '',
         showSettings: false,
+        showPreview: false, // 新增预览状态
+        previewImageUrl: '', // 新增预览图片URL
         settings: {
             provider: 'google',
             baseUrl: PROVIDERS.google.baseUrl,
@@ -92,7 +94,50 @@ function app() {
         },
         
         exportPreview() {
-            alert('预览图导出功能将在后续实现');
+            if (!this.generatedText) {
+                alert('请先生成文案');
+                return;
+            }
+            
+            this.isLoading = true;
+            try {
+                const previewDiv = document.createElement('div');
+                previewDiv.className = 'bg-white p-6 rounded-lg shadow-lg max-w-md mx-auto';
+                previewDiv.innerHTML = `
+                    <h2 class="text-xl font-semibold mb-4">文案预览</h2>
+                    <div class="whitespace-pre-line mb-4">${this.generatedText}</div>
+                    <div class="text-sm text-gray-500 mt-4">来自TextTuner生成</div>
+                `;
+                document.body.appendChild(previewDiv);
+
+                html2canvas(previewDiv, {
+                    scale: 2,
+                    logging: false,
+                    useCORS: true
+                }).then(canvas => {
+                    this.previewImageUrl = canvas.toDataURL('image/png');
+                    this.showPreview = true;
+                    document.body.removeChild(previewDiv);
+                }).catch(error => {
+                    console.error(error);
+                    alert('生成预览图时出错');
+                });
+            } catch (error) {
+                console.error(error);
+                alert('导出预览图时出错: ' + error.message);
+            } finally {
+                this.isLoading = false;
+            }
+        },
+        
+        downloadPreview() {
+            if (!this.previewImageUrl) return;
+            
+            const link = document.createElement('a');
+            link.download = 'texttuner-preview.png';
+            link.href = this.previewImageUrl;
+            link.click();
+            this.showPreview = false;
         },
         
         // 修改fetchModels方法
