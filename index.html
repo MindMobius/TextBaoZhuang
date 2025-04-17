@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TextTuner | 文案的包装与去包装</title>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div x-data="app()" class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold mb-6">TextTuner | 文案的包装与去包装</h1>
+        
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">输入文案</h2>
+            <textarea x-model="originalText" class="w-full h-32 p-3 border rounded"></textarea>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">包装程度调节</h2>
+            <div class="flex justify-between mt-1">
+                <span>-2</span>
+                <span>-1</span>
+                <span>0</span>
+                <span>1</span>
+                <span>2</span>
+            </div>
+            <input type="range" x-model="styleLevel" min="-2" max="2" step="1" class="w-full">
+            <div class="flex justify-between mt-1">
+                <span>去包装</span>
+                <span></span>
+                <span>标准</span>
+                <span></span>
+                <span>包装</span>
+            </div>
+        </div>
+
+        <button @click="generateText" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+            生成文案
+        </button>
+
+        <div x-show="generatedText" class="bg-white rounded-lg shadow p-6 mt-6">
+            <h2 class="text-xl font-semibold mb-4">生成结果</h2>
+            <div x-text="generatedText" class="whitespace-pre-line"></div>
+            <button @click="exportPreview" class="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+                导出预览图
+            </button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

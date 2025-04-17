@@ -1,0 +1,17 @@
+{
+  "name": "texttuner",
+  "version": "1.0.0",
+  "description": "一款智能文案风格调节器。它能够分析原始文案的“包装”程度，并根据您选择的五个等级（从“究极高大上”+2 到“极端的真实”-2），灵活调整和生成不同风格倾向的新文案。赋能用户自由掌控内容的表达张力。",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@alpinejs/focus": "^3.14.9",
+    "@alpinejs/ui": "^3.14.9",
+    "alpinejs": "^3.14.9"
+  }
+}
