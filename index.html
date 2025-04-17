@@ -26,19 +26,21 @@
         <div class="bg-white rounded-lg shadow p-6 mb-6">
             <h2 class="text-xl font-semibold mb-4">包装程度调节</h2>
             <div class="flex justify-between mt-1">
+                <span>-3</span>
                 <span>-2</span>
                 <span>-1</span>
                 <span>0</span>
                 <span>1</span>
                 <span>2</span>
             </div>
-            <input type="range" x-model="styleLevel" min="-2" max="2" step="1" class="w-full">
+            <input type="range" x-model="styleLevel" min="-3" max="2" step="1" class="w-full">
             <div class="flex justify-between mt-1">
+                <span>反包装</span>
+                <span>无包装</span>
                 <span>去包装</span>
-                <span></span>
                 <span>标准</span>
-                <span></span>
                 <span>包装</span>
+                <span>过度包装</span>
             </div>
         </div>
 
@@ -60,18 +62,32 @@
                 
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">提供商</label>
-                    <select x-model="settings.provider" class="w-full p-2 border rounded">
-                        <option value="openai">OpenAI</option>
-                        <option value="google">Google</option>
-                    </select>
+                    <select x-model="settings.provider" 
+                                @change="settings.baseUrl = PROVIDERS[settings.provider].baseUrl; settings.model = PROVIDERS[settings.provider].defaultModel" 
+                                class="w-full p-2 border rounded">
+                            <template x-for="(provider, key) in { google: 'Google', openai: 'OpenAI', custom: '自定义'}">
+                                <option :value="key" x-text="provider"></option>
+                            </template>
+                        </select>
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Base URL</label>
+                    <input x-model="settings.baseUrl" 
+                           :readonly="settings.provider !== 'custom'" 
+                           :class="settings.provider !== 'custom' ? 'bg-gray-100' : ''"
+                           class="w-full p-2 border rounded" 
+                           placeholder="输入自定义API地址">
                 </div>
 
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">模型</label>
-                    <select x-model="settings.model" class="w-full p-2 border rounded">
-                        <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
-                        <option value="gpt-4">GPT-4</option>
-                    </select>
+                    <div class="flex">
+                        <input x-model="settings.model" type="text" class="flex-1 p-2 border rounded" placeholder="输入模型名称或检索获取">
+                        <button @click="fetchModels" class="ml-2 bg-gray-200 px-3 rounded hover:bg-gray-300">
+                            检索
+                        </button>
+                    </div>
                 </div>
 
                 <div class="mb-4">
@@ -91,6 +107,8 @@
         </div>
     </div>
 
+    <!-- 在app.js之前引入 -->
+    <script src="prompts.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
