@@ -21,6 +21,18 @@
         <div class="bg-white rounded-lg shadow p-6 mb-6">
             <h2 class="text-xl font-semibold mb-4">输入文案</h2>
             <textarea x-model="originalText" class="w-full h-32 p-3 border rounded"></textarea>
+            <div class="mt-4 flex justify-between items-center">
+                <button @click="detectStyle" class="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600">
+                    包装识别
+                </button>
+                <div x-show="detectedLevel !== null" class="text-gray-700">
+                    识别结果: <span x-text="detectedLevelText"></span>
+                </div>
+            </div>
+            <div x-show="luXunCritique" class="mt-4 p-4 bg-gray-100 rounded">
+                <h3 class="font-semibold mb-2">包装点评:</h3>
+                <div x-text="luXunCritique" class="whitespace-pre-line italic"></div>
+            </div>
         </div>
 
         <div class="bg-white rounded-lg shadow p-6 mb-6">

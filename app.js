@@ -122,10 +122,99 @@ function app() {
             }
         },
         
+        detectedLevel: null,
+        detectedLevelText: '',
+        luXunCritique: '', // 新增鲁迅式批判内容
+        
+        // 修改detectStyle方法
+        async detectStyle() {
+            if (!this.originalText.trim()) {
+                alert('请输入要识别的文案');
+                return;
+            }
+            
+            if (!this.settings.apiKey) {
+                alert('请先配置API Key');
+                this.showSettings = true;
+                return;
+            }
+            
+            try {
+                const provider = this.settings.provider === 'custom' 
+                    ? { baseUrl: this.settings.baseUrl }
+                    : PROVIDERS[this.settings.provider];
+                
+                const prompt = window.PROMPTS.detectStyle(this.originalText);
+                const response = await fetch(`${provider.baseUrl}/chat/completions`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${this.settings.apiKey}`
+                    },
+                    body: JSON.stringify({
+                        model: this.settings.model,
+                        messages: [{role: "user", content: prompt}]
+                    })
+                });
+                
+                const data = await response.json();
+                const result = data.choices[0].message.content;
+                this.detectedLevel = parseInt(result);
+                this.updateDetectedLevelText();
+                await this.generateLuXunCritique(); // 新增鲁迅式批判生成
+                this.saveToLocalStorage();
+            } catch (error) {
+                console.error(error);
+                alert('识别包装等级时出错: ' + error.message);
+            }
+        },
+        
+        // 新增鲁迅式批判生成方法
+        async generateLuXunCritique() {
+            try {
+                const provider = this.settings.provider === 'custom' 
+                    ? { baseUrl: this.settings.baseUrl }
+                    : PROVIDERS[this.settings.provider];
+                
+                const prompt = window.PROMPTS.luXunCritique(this.originalText, this.detectedLevel);
+                const response = await fetch(`${provider.baseUrl}/chat/completions`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${this.settings.apiKey}`
+                    },
+                    body: JSON.stringify({
+                        model: this.settings.model,
+                        messages: [{role: "user", content: prompt}]
+                    })
+                });
+                
+                const data = await response.json();
+                this.luXunCritique = data.choices[0].message.content;
+            } catch (error) {
+                console.error(error);
+                this.luXunCritique = '生成鲁迅式批判时出错';
+            }
+        },
+        
+        updateDetectedLevelText() {
+            const levelTexts = {
+                '-3': '反包装',
+                '-2': '无包装',
+                '-1': '去包装',
+                '0': '标准',
+                '1': '包装',
+                '2': '过度包装'
+            };
+            this.detectedLevelText = levelTexts[this.detectedLevel] || '未知';
+        },
+        
+        // 修改saveToLocalStorage方法
         saveToLocalStorage() {
             localStorage.setItem('textTuner', JSON.stringify({
                 originalText: this.originalText,
                 styleLevel: this.styleLevel,
+                detectedLevel: this.detectedLevel,
                 settings: this.settings
             }));
         },
