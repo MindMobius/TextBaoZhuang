@@ -54,6 +54,41 @@ function app() {
         },
         
         // 修改generateText方法
+        // 在PROVIDERS定义后添加一个公共请求方法
+        // 修改makeApiRequest方法，添加systemPrompt参数
+        async makeApiRequest(provider, apiKey, model, originalText, systemPrompt = '') {
+            try {
+                const messages = [];
+                if (systemPrompt) {
+                    messages.push({role: "system", content: systemPrompt});
+                }
+                messages.push({role: "user", content: originalText});
+                
+                const response = await fetch(`${provider.baseUrl}/chat/completions`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`
+                    },
+                    body: JSON.stringify({
+                        model: model,
+                        messages: messages
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`API请求失败: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                return data.choices[0].message.content;
+            } catch (error) {
+                console.error('API请求错误:', error);
+                throw error;
+            }
+        },
+        
+        // 修改generateText方法调用
         async generateText() {
             if (!this.originalText.trim()) {
                 alert('请输入原始文案');
@@ -71,24 +106,16 @@ function app() {
                     ? { baseUrl: this.settings.baseUrl }
                     : PROVIDERS[this.settings.provider];
                 
-                const prompt = window.PROMPTS.styleAdjust(this.originalText, this.styleLevel);
-                const response = await fetch(`${provider.baseUrl}/chat/completions`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${this.settings.apiKey}`
-                    },
-                    body: JSON.stringify({
-                        model: this.settings.model,
-                        messages: [{role: "user", content: prompt}]
-                    })
-                });
-                
-                const data = await response.json();
-                this.generatedText = data.choices[0].message.content;
+                const systemPrompt = window.PROMPTS.styleAdjust(this.styleLevel);
+                this.generatedText = await this.makeApiRequest(
+                    provider,
+                    this.settings.apiKey,
+                    this.settings.model,
+                    this.originalText,  // 原文作为user消息
+                    systemPrompt  // 提示作为system消息
+                );
                 this.saveToLocalStorage();
             } catch (error) {
-                console.error(error);
                 alert('生成文案时出错: ' + error.message);
             }
         },
@@ -169,9 +196,8 @@ function app() {
         
         detectedLevel: null,
         detectedLevelText: '',
-        luXunCritique: '', // 新增鲁迅式批判内容
+        Critique: '',
         
-        // 修改detectStyle方法
         async detectStyle() {
             if (!this.originalText.trim()) {
                 alert('请输入要识别的文案');
@@ -189,24 +215,18 @@ function app() {
                     ? { baseUrl: this.settings.baseUrl }
                     : PROVIDERS[this.settings.provider];
                 
-                const prompt = window.PROMPTS.detectStyle(this.originalText);
-                const response = await fetch(`${provider.baseUrl}/chat/completions`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${this.settings.apiKey}`
-                    },
-                    body: JSON.stringify({
-                        model: this.settings.model,
-                        messages: [{role: "user", content: prompt}]
-                    })
-                });
+                const systemPrompt = window.PROMPTS.detectStyle();
+                const result = await this.makeApiRequest(
+                    provider,
+                    this.settings.apiKey,
+                    this.settings.model,
+                    this.originalText,  // 原文作为user消息
+                    systemPrompt  // 提示作为system消息
+                );
                 
-                const data = await response.json();
-                const result = data.choices[0].message.content;
                 this.detectedLevel = parseInt(result);
                 this.updateDetectedLevelText();
-                await this.generateLuXunCritique(); // 新增鲁迅式批判生成
+                await this.generateCritique();
                 this.saveToLocalStorage();
             } catch (error) {
                 console.error(error);
@@ -214,31 +234,24 @@ function app() {
             }
         },
         
-        // 新增鲁迅式批判生成方法
-        async generateLuXunCritique() {
+        // 优化后的generateCritique方法
+        async generateCritique() {
             try {
                 const provider = this.settings.provider === 'custom' 
                     ? { baseUrl: this.settings.baseUrl }
                     : PROVIDERS[this.settings.provider];
                 
-                const prompt = window.PROMPTS.luXunCritique(this.originalText, this.detectedLevel);
-                const response = await fetch(`${provider.baseUrl}/chat/completions`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${this.settings.apiKey}`
-                    },
-                    body: JSON.stringify({
-                        model: this.settings.model,
-                        messages: [{role: "user", content: prompt}]
-                    })
-                });
-                
-                const data = await response.json();
-                this.luXunCritique = data.choices[0].message.content;
+                const prompt = window.PROMPTS.Critique(this.detectedLevel);
+                this.Critique = await this.makeApiRequest(
+                    provider,
+                    this.settings.apiKey,
+                    this.settings.model,
+                    this.originalText,
+                    prompt
+                );
             } catch (error) {
                 console.error(error);
-                this.luXunCritique = '生成鲁迅式批判时出错';
+                this.Critique = '生成批判时出错';
             }
         },
         

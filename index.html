@@ -30,14 +30,20 @@
                     识别结果: <span x-text="detectedLevelText"></span>
                 </div>
             </div>
-            <div x-show="luXunCritique" class="mt-4 p-4 bg-gray-100 rounded">
+            <div x-show="Critique" class="mt-4 p-4 bg-gray-100 rounded">
                 <h3 class="font-semibold mb-2">包装点评:</h3>
-                <div x-text="luXunCritique" class="whitespace-pre-line italic"></div>
+                <div x-text="Critique" class="whitespace-pre-line italic"></div>
             </div>
         </div>
 
         <div class="bg-white rounded-lg shadow p-6 mb-6">
-            <h2 class="text-xl font-semibold mb-4">包装程度调节</h2>
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-semibold">包装程度调节</h2>
+                <button @click="generateText" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                    生成文案
+                </button>
+            </div>
+            
             <div class="flex justify-between mt-1">
                 <span>-3</span>
                 <span>-2</span>
@@ -56,10 +62,6 @@
                 <span>太**装了</span>
             </div>
         </div>
-
-        <button @click="generateText" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-            生成文案
-        </button>
 
         <div x-show="generatedText" class="bg-white rounded-lg shadow p-6 mt-6">
             <h2 class="text-xl font-semibold mb-4">生成结果</h2>
