@@ -19,9 +19,10 @@
                 </svg>
             </button>
         </div>
+
         <div class="bg-white rounded-lg shadow p-6 mb-6">
             <h2 class="text-xl font-semibold mb-4">输入文案</h2>
-            <textarea x-model="originalText" class="w-full h-32 p-3 border rounded"></textarea>
+            <textarea x-model="originalText" class="w-full h-80 p-3 border rounded"></textarea>
             <div class="mt-4 flex justify-between items-center">
                 <button @click="detectStyle" class="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600">
                     包装识别
@@ -45,16 +46,14 @@
             </div>
             
             <div class="flex justify-between mt-1">
-                <span>-3</span>
                 <span>-2</span>
                 <span>-1</span>
                 <span>0</span>
                 <span>1</span>
                 <span>2</span>
             </div>
-            <input type="range" x-model="styleLevel" min="-3" max="2" step="1" class="w-full">
+            <input type="range" x-model="styleLevel" min="-2" max="2" step="1" class="w-full">
             <div class="flex justify-between mt-1">
-                <span>痛！太痛了！</span>
                 <span>朴实无华</span>
                 <span>不装</span>
                 <span>标准</span>

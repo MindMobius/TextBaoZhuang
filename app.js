@@ -257,14 +257,13 @@ function app() {
         
         updateDetectedLevelText() {
             const levelTexts = {
-                '-3': '痛！太痛了！',
                 '-2': '朴实无华',
                 '-1': '不装',
                 '0': '标准',
                 '1': '小装一下',
                 '2': '太tm装了'
             };
-            this.detectedLevelText = levelTexts[this.detectedLevel] || '未知';
+            this.detectedLevelText = levelTexts[this.detectedLevel] + " " + "级别" + parseInt(this.detectedLevel) || '未知';
         },
         
         // 修改saveToLocalStorage方法
