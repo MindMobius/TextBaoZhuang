@@ -38,7 +38,7 @@
                 class="px-4 py-2">包装识别</button>
             <button @click="currentPage = 'adjust'"
                 :class="{'border-b-2 border-blue-500 font-medium': currentPage === 'adjust'}"
-                class="px-4 py-2">包装调节</button>
+                class="px-4 py-2">等级调整</button>
             <button @click="currentPage = 'critique'"
                 :class="{'border-b-2 border-blue-500 font-medium': currentPage === 'critique'}"
                 class="px-4 py-2">火眼金睛</button>
@@ -70,7 +70,7 @@
         <div x-show="currentPage === 'adjust'" class="bg-white rounded-lg shadow p-6 mb-6">
             <div class="mt-4">
                 <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-xl font-semibold">包装等级调节</h2>
+                    <h2 class="text-xl font-semibold">包装等级调整</h2>
                     <button @click="generateText" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
                         生成文案
                     </button>
@@ -104,14 +104,19 @@
             </div>
         </div>
 
-        <!-- 火眼金睛页面 (预留) -->
+        <!-- 火眼金睛页面 -->
         <div x-show="currentPage === 'critique'" class="bg-white rounded-lg shadow p-6 mb-6">
             <div class="mt-4">
                 <div class="mt-4 flex justify-between items-center">
                     <h2 class="text-xl font-semibold mb-4">火眼金睛</h2>
-                    <button @click="" class="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600">
+                    <button @click="analyzeTruth" class="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600">
                         批判一下
                     </button>
+                </div>
+                
+                <div x-show="truthAnalysis" class="mt-6">
+                    <h3 class="font-semibold mb-4">分析结果:</h3>
+                    <div x-html="truthAnalysis" class="prose max-w-none"></div>
                 </div>
             </div>
         </div>

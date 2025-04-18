@@ -20,7 +20,8 @@ const PROVIDERS = {
         baseUrl: '',
         models: [],
         defaultModel: ''
-    }
+    },
+    truthAnalysis: '',
 };
 
 function app() {
@@ -298,6 +299,38 @@ function app() {
             this.saveToLocalStorage();
             this.showSettings = false;
         },
+
+        // 添加新方法
+        async analyzeTruth() {
+            if (!this.originalText.trim()) {
+                alert('请输入要分析的文案');
+                return;
+            }
+
+            if (!this.settings.apiKey) {
+                alert('请先配置API Key');
+                this.showSettings = true;
+                return;
+            }
+
+            try {
+                const provider = this.settings.provider === 'custom'
+                    ? { baseUrl: this.settings.baseUrl }
+                    : PROVIDERS[this.settings.provider];
+
+                const prompt = window.PROMPTS.truthAnalysis();
+                this.truthAnalysis = await this.makeApiRequest(
+                    provider,
+                    this.settings.apiKey,
+                    this.settings.model,
+                    this.originalText,
+                    prompt
+                );
+            } catch (error) {
+                console.error(error);
+                this.truthAnalysis = '分析失败: ' + error.message;
+            }
+        }
     }
 }
 
