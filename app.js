@@ -179,16 +179,33 @@ function app() {
                 const provider = this.settings.provider === 'custom'
                     ? { baseUrl: this.settings.baseUrl }
                     : PROVIDERS[this.settings.provider];
-
+                
                 const response = await fetch(`${provider.baseUrl}/models`, {
                     headers: {
                         'Authorization': `Bearer ${this.settings.apiKey}`
                     }
                 });
-
+                
                 const data = await response.json();
                 provider.models = data.data.map(m => m.id);
-                alert(`获取到模型列表:\n${provider.models.join('\n')}`);
+                
+                // 创建模型列表对话框
+                const dialog = document.createElement('div');
+                dialog.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4';
+                dialog.innerHTML = `
+                    <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
+                        <h2 class="text-xl font-semibold mb-4">模型列表</h2>
+                        <h5 class="text-xs font-semibold mb-4">复制需要使用的模型名称，如：gemini-2.0-flash</h2>
+                        <textarea class="w-full h-40 p-2 border rounded mb-4" readonly>${provider.models.join('\n')}</textarea>
+                        <div class="flex justify-end space-x-2">
+                            <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" 
+                                onclick="this.closest('.fixed').remove()">
+                                关闭
+                            </button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(dialog);
             } catch (error) {
                 console.error(error);
                 alert('获取模型列表时出错: ' + error.message);
