@@ -181,11 +181,24 @@ function app() {
                 });
         },
 
+        copyGeneratedText() {
+            if (!this.generatedText) {
+                alert('请先生成文案');
+                return;
+            }
+
+            navigator.clipboard.writeText(this.generatedText)
+                .then(() => alert('文案已复制到剪贴板'))
+                .catch(err => console.error('复制失败: ', err));
+        },
+
         downloadPreview() {
             if (!this.previewImageUrl) return;
 
+            const now = new Date();
+            const filename = `TextBaoZhuang_${now.getFullYear()}_${now.getMonth() + 1}_${now.getDate()}_${now.getHours()}_${now.getMinutes()}_${now.getSeconds()}.png`;
             const link = document.createElement('a');
-            link.download = 'texttuner-preview.png';
+            link.download = filename;
             link.href = this.previewImageUrl;
             link.click();
             this.showPreview = false;

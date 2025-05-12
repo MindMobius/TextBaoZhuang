@@ -146,10 +146,16 @@
                 <div x-show="generatedText" class="mt-6">
                     <h2 class="text-xl font-semibold mb-4 text-gray-700">生成结果</h2>
                     <div x-text="generatedText" class="whitespace-pre-line text-gray-800"></div>
-                    <button @click="exportPreview"
-                        class="mt-4 bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded transition-colors duration-200">
-                        导出预览图
-                    </button>
+                    <div class="flex justify-end space-x-2 mt-4">
+                        <button @click="copyGeneratedText"
+                            class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition-colors duration-200">
+                            复制文本
+                        </button>
+                        <button @click="exportPreview"
+                            class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded transition-colors duration-200">
+                            导出预览图
+                        </button>
+                    </div>
                 </div>
             </div>
         </section>
