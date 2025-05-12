@@ -31,6 +31,8 @@ function app() {
         generatedText: '',
         showSettings: false,
         showPreview: false,
+        hiddenMeaningInput: '',
+        svgResult: '',
         previewImageUrl: '',
         currentPage: 'detect', // 新增当前页面状态
         settings: {
@@ -60,6 +62,7 @@ function app() {
         // 修改makeApiRequest方法，添加systemPrompt参数
         async makeApiRequest(provider, apiKey, model, originalText, systemPrompt = '') {
             try {
+                this.saveToLocalStorage();
                 const messages = [];
                 if (systemPrompt) {
                     messages.push({ role: "system", content: systemPrompt });
@@ -116,7 +119,7 @@ function app() {
                     this.originalText,  // 原文作为user消息
                     systemPrompt  // 提示作为system消息
                 );
-                this.saveToLocalStorage();
+                // this.saveToLocalStorage();
             } catch (error) {
                 alert('生成文案时出错: ' + error.message);
             }
@@ -246,7 +249,7 @@ function app() {
                 this.detectedLevel = parseInt(result);
                 this.updateDetectedLevelText();
                 await this.generateCritique();
-                this.saveToLocalStorage();
+                // this.saveToLocalStorage();
             } catch (error) {
                 console.error(error);
                 alert('识别包装等级时出错: ' + error.message);
@@ -330,7 +333,37 @@ function app() {
                 console.error(error);
                 this.truthAnalysis = '分析失败: ' + error.message;
             }
-        }
+        },
+
+        async analyzeHiddenMeaning() {
+            if (!this.settings.apiKey) {
+                alert('请先配置API Key');
+                this.showSettings = true;
+                return;
+            }
+
+            try {
+                const provider = this.settings.provider === 'custom'
+                    ? { baseUrl: this.settings.baseUrl }
+                    : PROVIDERS[this.settings.provider];
+
+                const systemPrompt = window.PROMPTS.hiddenMeaning();
+                const result = await this.makeApiRequest(
+                    provider,
+                    this.settings.apiKey,
+                    this.settings.model,
+                    this.originalText,  // 用户输入
+                    systemPrompt  // 提示作为system消息
+                );
+
+                this.svgResult = result;
+                // this.saveToLocalStorage();
+            } catch (error) {
+                console.error(error);
+                alert('分析言外之意时出错: ' + error.message);
+            }
+        },
+
     }
 }
 

@@ -15,16 +15,18 @@
 - markdown格式支持
 - 文案预览图导出
 
+## 待修复
+- 预览图过长，无法关闭
+
 ## 部署指南（待完善）
 1. 环境准备：
 - Node.js: 确保您的计算机上已经安装了Node.js。
 - AI API Key: 前往AI平台获取API Key。
 2. 安装依赖：
 ```
-npm init -y
-npm install alpinejs @alpinejs/ui @alpinejs/focus
+npm install
 ```
 3. 启动项目：
 ```
-npx serve .
+npm start
 ```

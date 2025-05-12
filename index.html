@@ -42,6 +42,9 @@
             <button @click="currentPage = 'critique'"
                 :class="{'border-b-2 border-blue-500 font-medium': currentPage === 'critique'}"
                 class="px-4 py-2">火眼金睛</button>
+            <button @click="currentPage = 'hiddenMeaning'"
+                :class="{'border-b-2 border-blue-500 font-medium': currentPage === 'hiddenMeaning'}"
+                class="px-4 py-2">言外之意</button>
         </div>
 
         <!-- 包装识别页面 -->
@@ -96,7 +99,7 @@
 
             <div x-show="generatedText" class="mt-6">
                 <h2 class="text-xl font-semibold mb-4">生成结果</h2>
-                <div x-text="generatedText" class="whitespace-pre-line"></div>
+                <div x-text="generatedText" style="white-space: pre-line;"></div>
                 <button @click="exportPreview"
                     class="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
                     导出预览图
@@ -116,7 +119,25 @@
                 
                 <div x-show="truthAnalysis" class="mt-6">
                     <h3 class="font-semibold mb-4">分析结果:</h3>
-                    <div x-html="truthAnalysis" class="prose max-w-none"></div>
+                    <div x-text="truthAnalysis" style="white-space: pre-line;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 言外之意页面 -->
+        <div x-show="currentPage === 'hiddenMeaning'" class="bg-white rounded-lg shadow p-6 mb-6">
+            <div class="mt-4">
+                <div class="mt-4 flex justify-between items-center">
+                <h2 class="text-xl font-semibold mb-4">言外之意</h2>
+                <button @click="analyzeHiddenMeaning"
+                    class="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600 mt-4">
+                    分析一下
+                    </button>
+                </div>
+
+                <div x-show="svgResult" class="mt-6">
+                    <h3 class="font-semibold mb-4">分析结果:</h3>
+                    <div x-text="svgResult" style="white-space: pre-line;"></div>
                 </div>
             </div>
         </div>
