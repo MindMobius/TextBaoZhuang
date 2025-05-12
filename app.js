@@ -144,11 +144,22 @@ function app() {
                 .then(base64Data => {
                     try {
                         const previewDiv = document.createElement('div');
-                        previewDiv.className = 'bg-white p-6 rounded-lg shadow-lg max-w-md mx-auto';
+                        previewDiv.className = 'bg-white p-6 rounded-lg shadow-lg max-w-5xl mx-auto';
+                        // Use marked to render Markdown to HTML
+                        const htmlContent = marked.parse(this.generatedText);
                         previewDiv.innerHTML = `
                             <h2 class="text-xl font-semibold mb-4">${this.styleLevel}级包装文案：</h2>
-                            <div class="text-wrapper whitespace-pre-line mb-4">${this.generatedText}</div>
-                            <div class="footer-container text-sm text-gray-500 mt-4 flex items-center justify-between">
+                            <div class="text-wrapper whitespace-pre-line mb-4" style="
+                                word-break: break-word;
+                                font-size: 16px;
+                                letter-spacing: 0.5px;
+                                line-height: 1.4;
+                            ">${htmlContent}</div>
+                            <div class="footer-container text-xm text-gray-500 mt-4 flex items-center justify-between" style="
+                                display: flex;
+                                justify-content: space-between;
+                                align-items: center;
+                            ">
                                 <span>来自 MindMobius/TextBaoZhuang</span>
                                 <img src="${base64Data}" alt="二维码" class="h-28">
                             </div>

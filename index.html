@@ -9,20 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
-    <style>
-        .text-wrapper {
-            word-break: break-word; /* 允许单词在达到容器边界时断开 */
-            font-size: 14px; /* 减小字体大小 */
-            letter-spacing: 0.5px; /* 调整字间距 */
-            line-height: 1.4; /* 调整行间距 */
-        }
-
-        .footer-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-    </style>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 
 <body class="bg-gray-100 min-h-screen font-sans">
@@ -256,10 +243,6 @@
         <div x-show="showPreview" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
             <div class="bg-white rounded-lg shadow-xl w-full max-w-md max-h-screen overflow-auto">
                 <div class="p-6">
-                    <h2 class="text-xl font-semibold mb-4 text-gray-800">预览图</h2>
-                    <div id="previewContent" class="mb-4">
-                        <img :src="previewImageUrl" alt="文案预览" class="max-w-full">
-                    </div>
                     <div class="flex justify-end space-x-2">
                         <button @click="downloadPreview"
                             class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
@@ -268,6 +251,10 @@
                         <button @click="showPreview = false" class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400">
                             关闭
                         </button>
+                    </div>
+                    <h2 class="text-xl font-semibold mb-4 text-gray-800">预览图</h2>
+                    <div id="previewContent" class="mb-4">
+                        <img :src="previewImageUrl" alt="文案预览" class="max-w-full">
                     </div>
                 </div>
             </div>

@@ -44,6 +44,9 @@ TextBaoZhuang 是一款创新的文案风格转换工具，旨在帮助用户轻
 本项目采用 [GPL-3.0 License](https://github.com/MindMobius/TextBaoZhuang/blob/main/LICENSE)。
 
 ## 致谢
-感谢所有为本项目提供支持和灵感的朋友
+感谢所有为本项目提供支持和灵感的朋友和工具
+- Google gemini
+- Cursor
+- cloudflare
 - 李继刚@lijigang_com
 - [PromptUp](https://promptup.net/)
