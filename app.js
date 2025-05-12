@@ -139,34 +139,46 @@ function app() {
             }
 
             this.isLoading = true;
-            try {
-                const previewDiv = document.createElement('div');
-                previewDiv.className = 'bg-white p-6 rounded-lg shadow-lg max-w-md mx-auto';
-                previewDiv.innerHTML = `
-                    <h2 class="text-xl font-semibold mb-4">文案预览</h2>
-                    <div class="whitespace-pre-line mb-4">${this.generatedText}</div>
-                    <div class="text-sm text-gray-500 mt-4">来自TextTuner生成</div>
-                `;
-                document.body.appendChild(previewDiv);
+            fetch('https://gist.githubusercontent.com/906051999/5bcff9c3ea0a7dffa273b4b82b6ca503/raw/6cbd5de37c8879bcfb3a816f6e38cc3c709199fc/TextBaoZhuang_qrcode')
+                .then(response => response.text())
+                .then(base64Data => {
+                    try {
+                        const previewDiv = document.createElement('div');
+                        previewDiv.className = 'bg-white p-6 rounded-lg shadow-lg max-w-md mx-auto';
+                        previewDiv.innerHTML = `
+                            <h2 class="text-xl font-semibold mb-4">${this.styleLevel}级包装文案：</h2>
+                            <div class="text-wrapper whitespace-pre-line mb-4">${this.generatedText}</div>
+                            <div class="footer-container text-sm text-gray-500 mt-4 flex items-center justify-between">
+                                <span>来自 MindMobius/TextBaoZhuang</span>
+                                <img src="${base64Data}" alt="二维码" class="h-28">
+                            </div>
+                        `;
+                        document.body.appendChild(previewDiv);
 
-                html2canvas(previewDiv, {
-                    scale: 2,
-                    logging: false,
-                    useCORS: true
-                }).then(canvas => {
-                    this.previewImageUrl = canvas.toDataURL('image/png');
-                    this.showPreview = true;
-                    document.body.removeChild(previewDiv);
-                }).catch(error => {
-                    console.error(error);
-                    alert('生成预览图时出错');
+                        html2canvas(previewDiv, {
+                            scale: 2,
+                            logging: false,
+                            useCORS: true
+                        }).then(canvas => {
+                            this.previewImageUrl = canvas.toDataURL('image/png');
+                            this.showPreview = true;
+                            document.body.removeChild(previewDiv);
+                        }).catch(error => {
+                            console.error(error);
+                            alert('生成预览图时出错');
+                        });
+                    } catch (error) {
+                        console.error(error);
+                        alert('导出预览图时出错: ' + error.message);
+                    } finally {
+                        this.isLoading = false;
+                    }
+                })
+                .catch(error => {
+                    console.error('Failed to load Base64 data from Gist:', error);
+                    alert('Failed to load QR code. Please check console for details.');
+                    this.isLoading = false;
                 });
-            } catch (error) {
-                console.error(error);
-                alert('导出预览图时出错: ' + error.message);
-            } finally {
-                this.isLoading = false;
-            }
         },
 
         downloadPreview() {
