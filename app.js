@@ -41,6 +41,7 @@ function app() {
             model: PROVIDERS.google.defaultModel,
             apiKey: ''
         },
+        isLoading: false, // 添加加载状态
 
         // 在init方法中添加
         init() {
@@ -61,6 +62,7 @@ function app() {
         // 在PROVIDERS定义后添加一个公共请求方法
         // 修改makeApiRequest方法，添加systemPrompt参数
         async makeApiRequest(provider, apiKey, model, originalText, systemPrompt = '') {
+            this.isLoading = true; // 开始请求时设置为 true
             try {
                 this.saveToLocalStorage();
                 const messages = [];
@@ -90,6 +92,8 @@ function app() {
             } catch (error) {
                 console.error('API请求错误:', error);
                 throw error;
+            } finally {
+                this.isLoading = false; // 请求结束后设置为 false
             }
         },
 
@@ -107,6 +111,7 @@ function app() {
             }
 
             try {
+                this.startLoadingAnimation(); // 开始加载动画
                 const provider = this.settings.provider === 'custom'
                     ? { baseUrl: this.settings.baseUrl }
                     : PROVIDERS[this.settings.provider];
@@ -122,6 +127,8 @@ function app() {
                 // this.saveToLocalStorage();
             } catch (error) {
                 alert('生成文案时出错: ' + error.message);
+            } finally {
+                this.stopLoadingAnimation(); // 停止加载动画
             }
         },
 
@@ -233,6 +240,7 @@ function app() {
             }
 
             try {
+                this.startLoadingAnimation(); // 开始加载动画
                 const provider = this.settings.provider === 'custom'
                     ? { baseUrl: this.settings.baseUrl }
                     : PROVIDERS[this.settings.provider];
@@ -253,6 +261,8 @@ function app() {
             } catch (error) {
                 console.error(error);
                 alert('识别包装等级时出错: ' + error.message);
+            } finally {
+                this.stopLoadingAnimation(); // 停止加载动画
             }
         },
 
@@ -303,6 +313,8 @@ function app() {
             this.showSettings = false;
         },
 
+        truthAnalysis: '', // 初始化 truthAnalysis 变量
+
         // 添加新方法
         async analyzeTruth() {
             if (!this.originalText.trim()) {
@@ -317,6 +329,7 @@ function app() {
             }
 
             try {
+                this.startLoadingAnimation(); // 开始加载动画
                 const provider = this.settings.provider === 'custom'
                     ? { baseUrl: this.settings.baseUrl }
                     : PROVIDERS[this.settings.provider];
@@ -332,6 +345,8 @@ function app() {
             } catch (error) {
                 console.error(error);
                 this.truthAnalysis = '分析失败: ' + error.message;
+            } finally {
+                this.stopLoadingAnimation(); // 停止加载动画
             }
         },
 
@@ -343,6 +358,7 @@ function app() {
             }
 
             try {
+                this.startLoadingAnimation(); // 开始加载动画
                 const provider = this.settings.provider === 'custom'
                     ? { baseUrl: this.settings.baseUrl }
                     : PROVIDERS[this.settings.provider];
@@ -361,6 +377,55 @@ function app() {
             } catch (error) {
                 console.error(error);
                 alert('分析言外之意时出错: ' + error.message);
+            } finally {
+                this.stopLoadingAnimation(); // 停止加载动画
+            }
+        },
+
+        startLoadingAnimation() {
+            // 创建 loading 元素
+            const loadingDiv = document.createElement('div');
+            loadingDiv.id = 'loading-animation';
+            loadingDiv.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 1000;
+                color: white;
+                font-size: 2em;
+            `;
+            loadingDiv.textContent = 'Loading...';
+            document.body.appendChild(loadingDiv);
+
+            // 使用 anime.js 创建动画
+            anime({
+                targets: loadingDiv,
+                opacity: [0, 1],
+                duration: 500,
+                easing: 'easeInOutQuad'
+            });
+        },
+
+        stopLoadingAnimation() {
+            const loadingDiv = document.getElementById('loading-animation');
+            if (loadingDiv) {
+                anime({
+                    targets: loadingDiv,
+                    opacity: [1, 0],
+                    duration: 500,
+                    easing: 'easeInOutQuad',
+                    complete: () => {
+                        if (loadingDiv && loadingDiv.parentNode) {
+                            loadingDiv.parentNode.removeChild(loadingDiv);
+                        }
+                    }
+                });
             }
         },
 
