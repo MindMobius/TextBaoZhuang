@@ -10,12 +10,14 @@
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 </head>
 
-<body class="bg-gray-50 min-h-screen">
-    <div x-data="app()" class="container mx-auto px-4 py-8">
-        <div class="flex justify-between items-center mb-6">
-            <h1 class="text-3xl font-bold">TextBaoZhuang | 文案的包装与去包装</h1>
-            <button @click="showSettings = true" class="text-gray-600 hover:text-gray-900">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+<body class="bg-gray-100 min-h-screen font-sans">
+    <div x-data="app()" class="container mx-auto px-6 py-10">
+        <!-- Header -->
+        <header class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-800">TextBaoZhuang | 文案的包装与去包装</h1>
+            <button @click="showSettings = true"
+                class="hover:bg-gray-200 rounded-full p-2 transition-colors duration-200">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
@@ -23,135 +25,139 @@
                         d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
             </button>
-        </div>
+        </header>
 
-        <div class="bg-white rounded-lg shadow p-6">
-            <h2 class="text-xl font-semibold mb-4">输入文案</h2>
-            <textarea x-model="originalText" class="w-full h-80 p-3 border rounded"></textarea>
-        </div>
+        <!-- Input Section -->
+        <section class="mb-8">
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-xl font-semibold mb-4 text-gray-700">输入文案</h2>
+                <textarea x-model="originalText"
+                    class="w-full h-64 p-3 border rounded focus:ring-2 focus:ring-blue-200 focus:border-blue-300 transition-shadow duration-200"></textarea>
+            </div>
+        </section>
 
-
-        <!-- 新增页面切换区 -->
-        <div class="flex border-b mb-6">
+        <!-- Navigation Tabs -->
+        <nav class="flex border-b mb-6">
             <button @click="currentPage = 'detect'"
-                :class="{'border-b-2 border-blue-500 font-medium': currentPage === 'detect'}"
-                class="px-4 py-2">包装识别</button>
+                :class="{'border-b-2 border-blue-500 font-medium text-blue-700': currentPage === 'detect', 'text-gray-600 hover:text-gray-800': currentPage !== 'detect'}"
+                class="px-6 py-3">包装识别</button>
             <button @click="currentPage = 'adjust'"
-                :class="{'border-b-2 border-blue-500 font-medium': currentPage === 'adjust'}"
-                class="px-4 py-2">等级调整</button>
+                :class="{'border-b-2 border-blue-500 font-medium text-blue-700': currentPage === 'adjust', 'text-gray-600 hover:text-gray-800': currentPage !== 'adjust'}"
+                class="px-6 py-3">等级调整</button>
             <button @click="currentPage = 'critique'"
-                :class="{'border-b-2 border-blue-500 font-medium': currentPage === 'critique'}"
-                class="px-4 py-2">火眼金睛</button>
+                :class="{'border-b-2 border-blue-500 font-medium text-blue-700': currentPage === 'critique', 'text-gray-600 hover:text-gray-800': currentPage !== 'critique'}"
+                class="px-6 py-3">火眼金睛</button>
             <button @click="currentPage = 'hiddenMeaning'"
-                :class="{'border-b-2 border-blue-500 font-medium': currentPage === 'hiddenMeaning'}"
-                class="px-4 py-2">言外之意</button>
-        </div>
+                :class="{'border-b-2 border-blue-500 font-medium text-blue-700': currentPage === 'hiddenMeaning', 'text-gray-600 hover:text-gray-800': currentPage !== 'hiddenMeaning'}"
+                class="px-6 py-3">言外之意</button>
+        </nav>
 
-        <!-- 包装识别页面 -->
-        <div x-show="currentPage === 'detect'" class="bg-white rounded-lg shadow p-6 mb-6">
-
-            <div class="mt-4">
-                <div class="mt-4 flex justify-between items-center">
-                    <h2 class="text-xl font-semibold">包装等级识别</h2>
-                    <button @click="detectStyle" class="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600">
+        <!-- Detect Section -->
+        <section x-show="currentPage === 'detect'" class="mb-6">
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold text-gray-700">包装等级识别</h2>
+                    <button @click="detectStyle"
+                        class="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded transition-colors duration-200">
                         开始识别
                     </button>
                 </div>
-            </div>
 
-            <div x-show="detectedLevelText" class="mt-4 p-4 bg-gray-100 rounded">
-                <h3 class="font-semibold mb-2">识别结果: </h3>
-                <div x-show="detectedLevel !== null" class="text-gray-700">
-                    <span x-text="detectedLevelText"></span>
+                <div x-show="detectedLevelText" class="mt-4 p-4 bg-gray-50 rounded">
+                    <h3 class="font-semibold mb-2 text-gray-700">识别结果:</h3>
+                    <div x-show="detectedLevel !== null" class="text-gray-700">
+                        <span x-text="detectedLevelText"></span>
+                    </div>
+                    <h3 class="font-semibold mb-2 mt-4 text-gray-700">包装点评:</h3>
+                    <div x-text="Critique || '等待生成'" class="whitespace-pre-line italic text-gray-800"></div>
                 </div>
-                <h3 class="font-semibold mb-2 mt-4">包装点评:</h3>
-                <div x-text="Critique || '等待生成'" class="whitespace-pre-line italic"></div>
             </div>
-        </div>
+        </section>
 
-        <!-- 包装调节页面 -->
-        <div x-show="currentPage === 'adjust'" class="bg-white rounded-lg shadow p-6 mb-6">
-            <div class="mt-4">
+        <!-- Adjust Section -->
+        <section x-show="currentPage === 'adjust'" class="mb-6">
+            <div class="bg-white rounded-lg shadow p-6">
                 <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-xl font-semibold">包装等级调整</h2>
-                    <button @click="generateText" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                    <h2 class="text-xl font-semibold text-gray-700">包装等级调整</h2>
+                    <button @click="generateText"
+                        class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition-colors duration-200">
                         生成文案
                     </button>
+                </div>
 
+                <div class="flex justify-between text-sm text-gray-600 mt-2">
+                    <span>-2</span>
+                    <span>-1</span>
+                    <span>0</span>
+                    <span>1</span>
+                    <span>2</span>
+                </div>
+                <input type="range" x-model="styleLevel" min="-2" max="2" step="1" class="w-full mt-2">
+                <div class="flex justify-between text-sm text-gray-600 mt-1">
+                    <span>朴实无华</span>
+                    <span>不装</span>
+                    <span>标准</span>
+                    <span>小装一下</span>
+                    <span>太**装了</span>
+                </div>
+
+                <div x-show="generatedText" class="mt-6">
+                    <h2 class="text-xl font-semibold mb-4 text-gray-700">生成结果</h2>
+                    <div x-text="generatedText" class="whitespace-pre-line text-gray-800"></div>
+                    <button @click="exportPreview"
+                        class="mt-4 bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded transition-colors duration-200">
+                        导出预览图
+                    </button>
                 </div>
             </div>
+        </section>
 
-            <div class="flex justify-between mt-1">
-                <span>-2</span>
-                <span>-1</span>
-                <span>0</span>
-                <span>1</span>
-                <span>2</span>
-            </div>
-            <input type="range" x-model="styleLevel" min="-2" max="2" step="1" class="w-full">
-            <div class="flex justify-between mt-1">
-                <span>朴实无华</span>
-                <span>不装</span>
-                <span>标准</span>
-                <span>小装一下</span>
-                <span>太**装了</span>
-            </div>
-
-            <div x-show="generatedText" class="mt-6">
-                <h2 class="text-xl font-semibold mb-4">生成结果</h2>
-                <div x-text="generatedText" style="white-space: pre-line;"></div>
-                <button @click="exportPreview"
-                    class="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
-                    导出预览图
-                </button>
-            </div>
-        </div>
-
-        <!-- 火眼金睛页面 -->
-        <div x-show="currentPage === 'critique'" class="bg-white rounded-lg shadow p-6 mb-6">
-            <div class="mt-4">
-                <div class="mt-4 flex justify-between items-center">
-                    <h2 class="text-xl font-semibold mb-4">火眼金睛</h2>
-                    <button @click="analyzeTruth" class="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600">
+        <!-- Critique Section -->
+        <section x-show="currentPage === 'critique'" class="mb-6">
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold text-gray-700">火眼金睛</h2>
+                    <button @click="analyzeTruth"
+                        class="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded transition-colors duration-200">
                         批判一下
                     </button>
                 </div>
-                
+
                 <div x-show="truthAnalysis" class="mt-6">
-                    <h3 class="font-semibold mb-4">分析结果:</h3>
-                    <div x-text="truthAnalysis" style="white-space: pre-line;"></div>
+                    <h3 class="font-semibold mb-4 text-gray-700">分析结果:</h3>
+                    <div x-text="truthAnalysis" class="whitespace-pre-line text-gray-800"></div>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <!-- 言外之意页面 -->
-        <div x-show="currentPage === 'hiddenMeaning'" class="bg-white rounded-lg shadow p-6 mb-6">
-            <div class="mt-4">
-                <div class="mt-4 flex justify-between items-center">
-                <h2 class="text-xl font-semibold mb-4">言外之意</h2>
-                <button @click="analyzeHiddenMeaning"
-                    class="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600 mt-4">
-                    分析一下
+        <!-- Hidden Meaning Section -->
+        <section x-show="currentPage === 'hiddenMeaning'" class="mb-6">
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold text-gray-700">言外之意</h2>
+                    <button @click="analyzeHiddenMeaning"
+                        class="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded transition-colors duration-200">
+                        分析一下
                     </button>
                 </div>
 
                 <div x-show="svgResult" class="mt-6">
-                    <h3 class="font-semibold mb-4">分析结果:</h3>
-                    <div x-text="svgResult" style="white-space: pre-line;"></div>
+                    <h3 class="font-semibold mb-4 text-gray-700">分析结果:</h3>
+                    <div x-text="svgResult" class="whitespace-pre-line text-gray-800"></div>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <!-- 设置对话框 -->
+        <!-- Settings Modal -->
         <div x-show="showSettings" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
             <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
-                <h2 class="text-xl font-semibold mb-4">AI 设置</h2>
+                <h2 class="text-xl font-semibold mb-4 text-gray-800">AI 设置</h2>
                 <div class="bg-blue-50 border border-blue-200 rounded p-3 mb-4 text-sm text-blue-800">
                     <p>• 所有AI请求均在您的浏览器本地完成，API密钥不会上传至任何服务器</p>
-                    <p>• 推荐从 <a href="https://aistudio.google.com/u/0/apikey" target="_blank" 
-                        class="text-blue-600 hover:underline font-medium">Google AI Studio</a> 获取免费的 API key</p>
+                    <p>• 推荐从 <a href="https://aistudio.google.com/u/0/apikey" target="_blank"
+                            class="text-blue-600 hover:underline font-medium">Google AI Studio</a> 获取免费的 API key</p>
                 </div>
-                
+
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">提供商</label>
                     <select x-model="settings.provider"
@@ -187,7 +193,8 @@
                 </div>
 
                 <div class="flex justify-end space-x-2">
-                    <button @click="saveSettings" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                    <button @click="saveSettings"
+                        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
                         保存
                     </button>
                     <button @click="showSettings = false" class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400">
@@ -196,13 +203,15 @@
                 </div>
             </div>
         </div>
-        <!-- 在设置对话框后面添加预览对话框 -->
+
+        <!-- Preview Modal -->
         <div x-show="showPreview" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
             <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
-                <h2 class="text-xl font-semibold mb-4">预览图</h2>
+                <h2 class="text-xl font-semibold mb-4 text-gray-800">预览图</h2>
                 <img :src="previewImageUrl" alt="文案预览" class="mb-4 max-w-full">
                 <div class="flex justify-end space-x-2">
-                    <button @click="downloadPreview" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                    <button @click="downloadPreview"
+                        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
                         下载图片
                     </button>
                     <button @click="showPreview = false" class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400">
@@ -213,7 +222,6 @@
         </div>
     </div>
 
-    <!-- 在app.js之前引入 -->
     <script src="prompts.js"></script>
     <script src="app.js"></script>
 </body>
