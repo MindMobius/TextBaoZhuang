@@ -64,21 +64,32 @@
                     class="w-full h-64 p-3 border rounded focus:ring-2 focus:ring-blue-200 focus:border-blue-300 transition-shadow duration-200"></textarea>
             </div>
         </section>
-
         <!-- Navigation Tabs -->
-        <nav class="flex border-b mb-6">
+        <nav class="flex border-b mb-6 overflow-x-auto">
             <button @click="currentPage = 'detect'"
                 :class="{'border-b-2 border-blue-500 font-medium text-blue-500': currentPage === 'detect', 'text-gray-600 hover:text-gray-800': currentPage !== 'detect'}"
-                class="px-6 py-3">包装识别</button>
+                class="px-6 py-3 whitespace-nowrap">包装识别</button>
             <button @click="currentPage = 'adjust'"
                 :class="{'border-b-2 border-blue-500 font-medium text-blue-500': currentPage === 'adjust', 'text-gray-600 hover:text-gray-800': currentPage !== 'adjust'}"
-                class="px-6 py-3">等级调整</button>
+                class="px-6 py-3 whitespace-nowrap">等级调整</button>
             <button @click="currentPage = 'critique'"
                 :class="{'border-b-2 border-blue-500 font-medium text-blue-500': currentPage === 'critique', 'text-gray-600 hover:text-gray-800': currentPage !== 'critique'}"
-                class="px-6 py-3">火眼金睛</button>
+                class="px-6 py-3 whitespace-nowrap">火眼金睛</button>
             <button @click="currentPage = 'hiddenMeaning'"
                 :class="{'border-b-2 border-blue-500 font-medium text-blue-500': currentPage === 'hiddenMeaning', 'text-gray-600 hover:text-gray-800': currentPage !== 'hiddenMeaning'}"
-                class="px-6 py-3">言外之意</button>
+                class="px-6 py-3 whitespace-nowrap">言外之意</button>
+            <button @click="currentPage = 'styleSummary'"
+                :class="{'border-b-2 border-blue-500 font-medium text-blue-500': currentPage === 'styleSummary', 'text-gray-600 hover:text-gray-800': currentPage !== 'styleSummary'}"
+                class="px-6 py-3 whitespace-nowrap">风格总结</button>
+            <button @click="currentPage = 'textImitation'"
+                :class="{'border-b-2 border-blue-500 font-medium text-blue-500': currentPage === 'textImitation', 'text-gray-600 hover:text-gray-800': currentPage !== 'textImitation'}"
+                class="px-6 py-3 whitespace-nowrap">文案仿写</button>
+            <button @click="currentPage = 'textContinuation'"
+                :class="{'border-b-2 border-blue-500 font-medium text-blue-500': currentPage === 'textContinuation', 'text-gray-600 hover:text-gray-800': currentPage !== 'textContinuation'}"
+                class="px-6 py-3 whitespace-nowrap">文案续写</button>
+            <button @click="currentPage = 'textExpansion'"
+                :class="{'border-b-2 border-blue-500 font-medium text-blue-500': currentPage === 'textExpansion', 'text-gray-600 hover:text-gray-800': currentPage !== 'textExpansion'}"
+                class="px-6 py-3 whitespace-nowrap">文案扩写</button>
         </nav>
 
         <!-- Detect Section -->
@@ -179,6 +190,78 @@
                 <div x-show="svgResult" class="mt-6">
                     <h3 class="font-semibold mb-4 text-gray-700">分析结果:</h3>
                     <div x-text="svgResult" class="whitespace-pre-line text-gray-800"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Style Summary Section -->
+        <section x-show="currentPage === 'styleSummary'" class="mb-6">
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold text-gray-700">风格总结</h2>
+                    <button @click="summarizeStyle"
+                        class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition-colors duration-200">
+                        总结风格
+                    </button>
+                </div>
+
+                <div x-show="styleSummaryResult" class="mt-6">
+                    <h3 class="font-semibold mb-4 text-gray-700">风格总结结果:</h3>
+                    <div x-text="styleSummaryResult" class="whitespace-pre-line text-gray-800"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Text Imitation Section -->
+        <section x-show="currentPage === 'textImitation'" class="mb-6">
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold text-gray-700">文案仿写</h2>
+                    <button @click="imitateText"
+                        class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition-colors duration-200">
+                        开始仿写
+                    </button>
+                </div>
+
+                <div x-show="textImitationResult" class="mt-6">
+                    <h3 class="font-semibold mb-4 text-gray-700">文案仿写结果:</h3>
+                    <div x-text="textImitationResult" class="whitespace-pre-line text-gray-800"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Text Continuation Section -->
+        <section x-show="currentPage === 'textContinuation'" class="mb-6">
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold text-gray-700">文案续写</h2>
+                    <button @click="continueText"
+                        class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition-colors duration-200">
+                        开始续写
+                    </button>
+                </div>
+
+                <div x-show="textContinuationResult" class="mt-6">
+                    <h3 class="font-semibold mb-4 text-gray-700">文案续写结果:</h3>
+                    <div x-text="textContinuationResult" class="whitespace-pre-line text-gray-800"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Text Expansion Section -->
+        <section x-show="currentPage === 'textExpansion'" class="mb-6">
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold text-gray-700">文案扩写</h2>
+                    <button @click="expandText"
+                        class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition-colors duration-200">
+                        开始扩写
+                    </button>
+                </div>
+
+                <div x-show="textExpansionResult" class="mt-6">
+                    <h3 class="font-semibold mb-4 text-gray-700">文案扩写结果:</h3>
+                    <div x-text="textExpansionResult" class="whitespace-pre-line text-gray-800"></div>
                 </div>
             </div>
         </section>

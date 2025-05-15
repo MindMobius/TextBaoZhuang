@@ -41,7 +41,11 @@ function app() {
             model: PROVIDERS.google.defaultModel,
             apiKey: ''
         },
-        isLoading: false, // 添加加载状态
+        isLoading: false,
+        styleSummaryResult: '',
+        textImitationResult: '',
+        textContinuationResult: '',
+        textExpansionResult: '',
 
         // 在init方法中添加
         init() {
@@ -415,6 +419,146 @@ function app() {
                 alert('分析言外之意时出错: ' + error.message);
             } finally {
                 this.stopLoadingAnimation(); // 停止加载动画
+            }
+        },
+
+        // 添加新方法：风格总结
+        async summarizeStyle() {
+            if (!this.originalText.trim()) {
+                alert('请输入要总结风格的文案');
+                return;
+            }
+
+            if (!this.settings.apiKey) {
+                alert('请先配置API Key');
+                this.showSettings = true;
+                return;
+            }
+
+            try {
+                this.startLoadingAnimation();
+                const provider = this.settings.provider === 'custom'
+                    ? { baseUrl: this.settings.baseUrl }
+                    : PROVIDERS[this.settings.provider];
+
+                const prompt = window.PROMPTS.styleSummary();
+                this.styleSummaryResult = await this.makeApiRequest(
+                    provider,
+                    this.settings.apiKey,
+                    this.settings.model,
+                    this.originalText,
+                    prompt
+                );
+            } catch (error) {
+                console.error(error);
+                this.styleSummaryResult = '风格总结失败: ' + error.message;
+            } finally {
+                this.stopLoadingAnimation();
+            }
+        },
+
+        // 添加新方法：文案仿写
+        async imitateText() {
+            if (!this.originalText.trim()) {
+                alert('请输入要仿写的文案');
+                return;
+            }
+
+            if (!this.settings.apiKey) {
+                alert('请先配置API Key');
+                this.showSettings = true;
+                return;
+            }
+
+            try {
+                this.startLoadingAnimation();
+                const provider = this.settings.provider === 'custom'
+                    ? { baseUrl: this.settings.baseUrl }
+                    : PROVIDERS[this.settings.provider];
+
+                const prompt = window.PROMPTS.textImitation();
+                this.textImitationResult = await this.makeApiRequest(
+                    provider,
+                    this.settings.apiKey,
+                    this.settings.model,
+                    this.originalText,
+                    prompt
+                );
+            } catch (error) {
+                console.error(error);
+                this.textImitationResult = '文案仿写失败: ' + error.message;
+            } finally {
+                this.stopLoadingAnimation();
+            }
+        },
+
+        // 添加新方法：文案续写
+        async continueText() {
+            if (!this.originalText.trim()) {
+                alert('请输入要续写的文案');
+                return;
+            }
+
+            if (!this.settings.apiKey) {
+                alert('请先配置API Key');
+                this.showSettings = true;
+                return;
+            }
+
+            try {
+                this.startLoadingAnimation();
+                const provider = this.settings.provider === 'custom'
+                    ? { baseUrl: this.settings.baseUrl }
+                    : PROVIDERS[this.settings.provider];
+
+                const prompt = window.PROMPTS.textContinuation();
+                this.textContinuationResult = await this.makeApiRequest(
+                    provider,
+                    this.settings.apiKey,
+                    this.settings.model,
+                    this.originalText,
+                    prompt
+                );
+            } catch (error) {
+                console.error(error);
+                this.textContinuationResult = '文案续写失败: ' + error.message;
+            } finally {
+                this.stopLoadingAnimation();
+            }
+        },
+
+        // 添加新方法：文案扩写
+        async expandText() {
+            if (!this.originalText.trim()) {
+                alert('请输入要扩写的文案');
+                return;
+            }
+
+            if (!this.settings.apiKey) {
+                alert('请先配置API Key');
+                this.showSettings = true;
+                return;
+            }
+
+            try {
+                this.startLoadingAnimation();
+                const provider = this.settings.provider === 'custom'
+                    ? { baseUrl: this.settings.baseUrl }
+                    : PROVIDERS[this.settings.provider];
+
+                const prompt = window.PROMPTS.textExpansion();
+                this.textExpansionResult = await this.makeApiRequest(
+                    provider,
+                    this.settings.apiKey,
+                    this.settings.model,
+                    this.originalText,
+                    prompt
+                );
+            } catch (error) {
+                console.error(error);
+                this.textExpansionResult = '文案扩写失败: ' + error.message;
+            } finally {
+                this.stopLoadingAnimation();
             }
         },
 
